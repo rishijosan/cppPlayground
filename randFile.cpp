@@ -23,11 +23,10 @@ void getRandBuf(std::string& buffer, size_t bufSize){
     //std::uniform_int_distribution<char> dis;
     static std::uniform_int_distribution<> dis(0, strlen(alphanumeric) - 1);
     
-    auto partitionSize = bufSize/NUM_THREADS;
-
     // Generate random data and write to file
-    for (size_t i = 0; i < partitionSize; i++) {
-        buffer[(tid*partitionSize) + i] =  alphanumeric[dis(gen)];
+    for (size_t i = 0; i < bufSize; i++) {
+        buffer[i] =  alphanumeric[dis(gen)];
+        //buffer[i] =  alphanumeric[tid];
     }
   }
 }
@@ -35,7 +34,7 @@ void getRandBuf(std::string& buffer, size_t bufSize){
 
 int main() {
   // Set file size in bytes
-  const size_t bufSize = 1073741824;
+  const size_t bufSize = 1024*1024*512;
   std::string buffer;
   buffer.reserve(bufSize);
 
