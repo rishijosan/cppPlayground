@@ -13,6 +13,7 @@ void getRandBuf(std::string& buffer, size_t bufSize){
   // Initialize random number generator
   std::random_device rd;
 
+  //Parallelize over 4 threads and keep a separate random_device per thread
   #pragma omp parallel num_threads(NUM_THREADS) private(rd)
   {
     int tid = omp_get_thread_num();
@@ -59,7 +60,7 @@ int main() {
   }
   end_time = std::chrono::high_resolution_clock::now();
   elapsed_time = end_time - start_time;
-  std::cout << "Time taken generating rand: " << elapsed_time.count() / 1e9 << " seconds" << std::endl;
+  std::cout << "Time taken writing to disk: " << elapsed_time.count() / 1e9 << " seconds" << std::endl;
 
   file.close();
 
