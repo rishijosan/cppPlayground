@@ -5,7 +5,7 @@
 #include <cstring>
 #include <omp.h>
 
-#define NUM_THREADS 2
+#define NUM_THREADS 4
 
 void getRandBuf(std::string& buffer, size_t bufSize){
 
@@ -35,7 +35,7 @@ void getRandBuf(std::string& buffer, size_t bufSize){
 
 int main() {
   // Set file size in bytes
-  const size_t bufSize = 1024*1024;
+  const size_t bufSize = 1024*1024*128;
   std::string buffer;
   buffer.reserve(bufSize);
 
