@@ -5,13 +5,16 @@
 #include <cstring>
 #include <omp.h>
 
-#define NUM_THREADS 4
+#define NUM_THREADS 2
 
 void getRandBuf(std::string& buffer, size_t bufSize){
 
   const char alphanumeric[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
   // Initialize random number generator
   std::random_device rd;
+  
+  //std::uniform_int_distribution<char> dis;
+  static std::uniform_int_distribution<> dis(0, strlen(alphanumeric) - 1);
 
   //Parallelize over 4 threads and keep a separate random_device per thread
   #pragma omp parallel num_threads(NUM_THREADS) private(rd)
@@ -20,10 +23,8 @@ void getRandBuf(std::string& buffer, size_t bufSize){
     std::mt19937 gen(rd() + tid); 
     //std::default_random_engine gen(rd());
 
-    //std::uniform_int_distribution<char> dis;
-    static std::uniform_int_distribution<> dis(0, strlen(alphanumeric) - 1);
-    
     // Generate random data and write to file
+    #pragma omp for
     for (size_t i = 0; i < bufSize; i++) {
         buffer[i] =  alphanumeric[dis(gen)];
         //buffer[i] =  alphanumeric[tid];
@@ -34,7 +35,7 @@ void getRandBuf(std::string& buffer, size_t bufSize){
 
 int main() {
   // Set file size in bytes
-  const size_t bufSize = 1024*1024*512;
+  const size_t bufSize = 1024*1024;
   std::string buffer;
   buffer.reserve(bufSize);
 
